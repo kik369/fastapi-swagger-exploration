@@ -3,3 +3,4 @@ __pycache__/
 .venv/
 fastapi-swagger-exploration.code-workspace
 db.sqlite3
+sql_app.db

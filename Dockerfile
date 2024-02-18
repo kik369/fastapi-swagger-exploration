@@ -49,7 +49,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     uv pip install -r requirements.txt
 
 # Switch to the non-privileged user to run the application.
-USER appuser
+# USER appuser
 
 # Copy the source code into the container.
 COPY . .
@@ -60,5 +60,9 @@ EXPOSE 8000
 # For some reason the uvicorn command is not found when running the container, so we need to add the path to the .venv/bin directory to the PATH environment variable.
 ENV PATH="/app/.venv/bin:$PATH"
 
+# Initialize Alembic for database migrations
+RUN if [ ! -d "alembic" ]; then /bin/bash -c "alembic init alembic"; fi
+
 # Run the application.
-CMD /bin/bash -c "uvicorn main:app --host 0.0.0.0 --reload"
+# CMD /bin/bash -c "uvicorn main:app --host 0.0.0.0 --reload"
+CMD /bin/bash -c "uvicorn sql_app.main:app --host 0.0.0.0 --reload"

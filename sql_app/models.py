@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, text
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -13,7 +13,14 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+
+    # default: This is a Python-side default value. It's used when you create a new instance of the model in Python and don't provide a value for this column. SQLAlchemy will use this default value when inserting the new row into the database.
     is_active = Column(Boolean, default=True)
+    is_staff = Column(Boolean, default=False)
+    is_premium = Column(Boolean, default=False)
+
+    # server_default: This is a server-side default value. It's used when a new row is inserted into the database and no value is provided for this column. The database itself will use this default value. It's also used when the column is added to an existing table during a migration.
+    is_superuser = Column(Boolean, default=False, server_default=text("false"))
 
     # in sqlalchemy, the relationsip needs to be established from both sides
     # unlike in Django where the relationship is established from one side
@@ -28,4 +35,5 @@ class Item(Base):
     description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
+    # relationsip needs to be established from both sides
     owner = relationship("User", back_populates="items")
