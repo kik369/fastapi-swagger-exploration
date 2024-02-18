@@ -18,8 +18,12 @@ services:
         develop:
             watch:
                 - action: sync
-                  path: ./main.py
-                  target: /app/main.py
+                  path: .
+                  target: /app/
+                  ignore:
+                      - __pycache__
+                      - .pytest_cache
+                      - .venv
         volumes:
             - ./main.py:/app/main.py
 # The commented out section below is an example of how to define a PostgreSQL

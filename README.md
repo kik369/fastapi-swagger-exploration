@@ -10,6 +10,8 @@
 
 [Swagger UI](https://github.com/swagger-api/swagger-ui) for documentation. Swagger UI is included with fastAPI. API documentation is available at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
+[SQLAlchemy](https://www.sqlalchemy.org/) ORM.
+
 ### Run with Docker
 
 `docker compose up --build`
@@ -39,6 +41,10 @@ Install from requirements:
 ### Run the server:
 
 `uvicorn main:app --reload`
+
+or for the CRUD app
+
+`uvicorn sql_app.main:app --reload`
 
 API is accessible on:
 

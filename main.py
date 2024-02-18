@@ -2,7 +2,24 @@ import time
 from enum import Enum
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+app = FastAPI()
+
+# Origins that can access the API
+origins = [
+    # this would be the frontend making requests to the api
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class Item(BaseModel):
@@ -12,10 +29,7 @@ class Item(BaseModel):
     tax: float | None = None
 
 
-app = FastAPI()
-
-
-# python enum to use as fixed values as path parameters
+# python enum to use as fixed values for path parameters
 class ModelName(str, Enum):
     alexnet = "alexnet"
     resnet = "resnet"
@@ -43,8 +57,10 @@ async def get_model(model_name: ModelName):
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
-# http://127.0.0.1:8000/files/home/user/some.txt returns "file_path": "home/user/some.txt"
-# http://127.0.0.1:8000/files//home/user/some.txt returns "file_path": "/home/user/some.txt"
+# http://127.0.0.1:8000/files/home/user/some.txt
+# returns "file_path": "home/user/some.txt"
+# http://127.0.0.1:8000/files//home/user/some.txt
+# returns "file_path": "/home/user/some.txt"
 @app.get("/files/{file_path:path}")
 async def read_file(file_path: str):
     return {"file_path": file_path}
