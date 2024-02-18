@@ -15,19 +15,18 @@ from pydantic import BaseModel, Field
 
 class ItemBase(BaseModel):
     title: str
-    description: str | None = None
+    description: Optional[str] = None
+    owner_id: int
 
 
-class ItemCreate(ItemBase):
-    pass
+class ItemCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
 
 
 class Item(ItemBase):
     id: int
-    owner_id: int
-    owner: "User"  # This is a forward reference. It allows you to reference the User model before it's actually defined. This is necessary for the relationship between User and Item, because they both reference each other. You can use a string with the name of the model, as a string, inside quotes. This is a special syntax that tells Pydantic that it's a forward reference. It's not a string, it's a reference to a model that will be defined later.
 
-    # You can customize the behavior of your Pydantic models by defining a Config class inside your model. This allows you to control things like whether fields are required by default, whether unknown fields are allowed, and how fields are serialized.
     class Config:
         orm_mode = True
 
